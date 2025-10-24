@@ -1,0 +1,370 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Abhyuday Ojha — Portfolio</title>
+
+  <!-- Google font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
+
+  <meta name="color-scheme" content="light dark">
+
+  <style>
+    :root{
+      --bg:#060613; --card:#0d1020; --glass:rgba(255,255,255,0.04);
+      --accent:#ffcc00; --text:#eaf2ff; --muted:#9fb2c8;
+    }
+    [data-theme="light"]{
+      --bg:#f6f8fb; --card:#ffffff; --glass:rgba(0,0,0,0.03);
+      --accent:#6b46ff; --text:#0f1724; --muted:#2b3a4a;
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;font-family:"Poppins",system-ui,Segoe UI,Roboto,Arial;color:var(--text);background:var(--bg);-webkit-font-smoothing:antialiased}
+    a{color:inherit}
+
+    /* Vanta background container (fills screen) */
+    #vanta-bg{position:fixed;inset:0;z-index:-3;pointer-events:none}
+
+    /* optional background image overlay (low alpha) */
+    #bg-image{position:fixed;inset:0;width:100%;height:100%;object-fit:cover;opacity:0.06;z-index:-2;pointer-events:none}
+
+    /* mouse glow */
+    .cursor-glow{position:fixed;width:220px;height:220px;border-radius:50%;pointer-events:none;z-index:-1;mix-blend-mode:screen;
+      background:radial-gradient(circle at 30% 30%, rgba(255,204,0,0.22), rgba(255,204,0,0.06) 35%, transparent 60%);
+      transform:translate(-50%,-50%);transition:width .12s ease,height .12s ease,opacity .12s}
+    
+    /* header */
+    header{position:fixed;left:0;right:0;top:14px;display:flex;justify-content:space-between;align-items:center;padding:12px 28px;z-index:40}
+    .brand{font-weight:800;letter-spacing:0.2px}
+    .nav{display:flex;gap:12px;align-items:center}
+    .nav a{padding:8px 10px;border-radius:8px;text-decoration:none;color:var(--muted);font-weight:600}
+    .nav a:hover{background:var(--glass);color:var(--text)}
+
+    /* theme/music controls */
+    .controls{display:flex;gap:10px;align-items:center}
+    .icon-btn{background:var(--glass);border:none;padding:8px 10px;border-radius:10px;color:var(--text);cursor:pointer;font-weight:700}
+
+    /* hero */
+    .hero{min-height:100vh;display:flex;align-items:center;padding:120px 24px;z-index:10}
+    .hero-inner{max-width:1140px;margin:0 auto;display:grid;grid-template-columns:1fr 480px;gap:36px;align-items:center}
+    .hero-text h1{font-size:48px;margin:0 0 6px}
+    .hero-text .name{color:var(--accent);font-weight:900}
+    .lead{color:var(--muted);font-size:18px;max-width:56ch}
+
+    .typing{margin-top:14px;color:var(--text);font-weight:600;font-size:18px}
+
+    /* right card shows live 3D object preview or image */
+    .hero-card{background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);backdrop-filter:blur(6px);padding:18px;border-radius:16px;box-shadow:0 12px 50px rgba(2,6,23,0.6)}
+    .canvas-box{width:100%;height:360px;border-radius:12px;overflow:hidden;background:#000}
+
+    /* sections */
+    section{padding:88px 20px 120px;position:relative}
+    .container{max-width:1100px;margin:0 auto}
+    h2{color:var(--accent);font-size:28px;margin-bottom:10px}
+    p.lead-muted{color:var(--muted);line-height:1.7}
+
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;margin-top:18px}
+    .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:16px;border-radius:12px}
+
+    /* contact */
+    form{display:grid;gap:10px;max-width:640px}
+    input,textarea{padding:12px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:var(--text);outline:none}
+    button.primary{background:linear-gradient(90deg,var(--accent),#5a98ff);border:none;padding:12px 16px;border-radius:10px;color:#fff;font-weight:700;cursor:pointer}
+
+    footer{padding:36px 20px;text-align:center;color:var(--muted)}
+
+    @media (max-width:980px){
+      .hero-inner{grid-template-columns:1fr;gap:18px}
+      .canvas-box{height:280px}
+      .hero{padding:80px 16px}
+      .hero-text h1{font-size:32px}
+    }
+  </style>
+</head>
+<body>
+  <!-- Vanta background -->
+  <div id="vanta-bg"></div>
+  <!-- Optional overlay background image (if you upload assets/bg.jpg) -->
+  <img id="bg-image" src="assets/bg.jpg" alt="bg" style="display:none">
+
+  <!-- mouse glow -->
+  <div class="cursor-glow" id="cursorGlow"></div>
+
+  <!-- HEADER -->
+  <header>
+    <div class="brand">Abhyuday Ojha</div>
+    <div class="nav">
+      <a href="#about">About</a>
+      <a href="#work">Work</a>
+      <a href="#contact">Contact</a>
+      <div class="controls">
+        <button id="musicBtn" class="icon-btn" title="Play / Pause (music)">▶︎</button>
+        <button id="themeBtn" class="icon-btn" title="Toggle theme">🌗</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <main class="hero">
+    <div class="hero-inner container">
+      <div class="hero-text">
+        <h1>Hi, I'm <span class="name">Abhyuday Ojha</span></h1>
+        <div class="lead">Web developer · Student · Graphic Designer · I build 3D APKs and visual web applications</div>
+        <div class="typing" id="typedLine">I build: <strong id="typed"></strong></div>
+
+        <div style="margin-top:20px">
+          <a class="primary btn" href="#work">See my work</a>
+          <a class="btn" href="#contact" style="margin-left:10px">Contact</a>
+        </div>
+
+        <div style="margin-top:18px;color:var(--muted)">
+          Connect:
+          <a href="https://instagram.com/abhyudayojha/" target="_blank">Instagram</a> ·
+          <a href="https://www.facebook.com/profile.php?id=61569350793152" target="_blank">Facebook</a> ·
+          <a href="https://x.com/Abhyuday_Ojha" target="_blank">X</a> ·
+          <a href="https://open.spotify.com/playlist/1mkSaNRukjTTxboM1FaGuA?si=htJEN8zDTE2ECVqJ4lCxfg" target="_blank">Spotify</a> ·
+          <a href="https://www.youtube.com/@WasAbhyuday" target="_blank">YouTube</a>
+        </div>
+      </div>
+
+      <div class="hero-card">
+        <div class="canvas-box" id="threeBox">
+          <!-- Three.js canvas will be injected here -->
+          <canvas id="threeCanvas" style="width:100%;height:100%;display:block"></canvas>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="container">
+      <h2>About</h2>
+      <p class="lead-muted">I am a student and developer focused on combining AI, 3D visuals and modern web tech to create immersive experiences. I build 3D APKs and visual web applications.</p>
+    </div>
+  </section>
+
+  <!-- WORK -->
+  <section id="work">
+    <div class="container">
+      <h2>Work / Portfolio</h2>
+      <div class="grid" id="projects">
+        <!-- Example card (replace with your apps, APK links) -->
+        <div class="card">
+          <strong>3D Visual App</strong>
+          <div style="margin-top:8px;color:var(--muted)">A prototype interactive 3D viewer — APK & Web builds available.</div>
+          <div style="margin-top:12px"><a href="#" target="_blank">Open</a></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="container">
+      <h2>Contact</h2>
+      <p class="lead-muted">Use the form to reach me — or open mail client fallback.</p>
+
+      <form id="contactForm" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+        <input name="name" placeholder="Your name" required />
+        <input name="email" type="email" placeholder="Your email" required />
+        <textarea name="message" rows="5" placeholder="Message" required></textarea>
+        <div style="margin-top:8px;display:flex;gap:10px;align-items:center">
+          <button type="submit" class="primary">Send</button>
+          <button type="button" id="openMail" class="btn">Open Mail</button>
+        </div>
+        <div id="formResult" style="margin-top:8px;color:var(--muted)"></div>
+      </form>
+    </div>
+  </section>
+
+  <footer>© <span id="year"></span> Abhyuday Ojha</footer>
+
+  <!-- MUSIC (sample). Replace URL if you have your own MP3 in assets/bg-music.mp3 -->
+  <audio id="bgMusic" loop crossorigin="anonymous">
+    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+  </audio>
+
+  <!-- SCRIPTS: Three (module not needed for Vanta CDN), Vanta via CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/three@0.121.1/build/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.waves.min.js"></script>
+
+  <script>
+  // ---------- Theme (auto and toggle) ----------
+  (function(){
+    const themeBtn = document.getElementById('themeBtn');
+    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const initial = localStorage.getItem('theme') || (prefersDark ? 'dark' : 'light');
+    document.documentElement.setAttribute('data-theme', initial);
+    themeBtn.addEventListener('click', () => {
+      const cur = document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', cur);
+      localStorage.setItem('theme', cur);
+    });
+  })();
+
+  // ---------- Vanta background ----------
+  (function(){
+    // If you uploaded assets/bg.jpg and want it visible, un-comment line in CSS or use it elsewhere.
+    VANTA.WAVES({
+      el: "#vanta-bg",
+      mouseControls: true,
+      touchControls: true,
+      gyroControls: false,
+      minHeight: 200.00,
+      minWidth: 200.00,
+      scale: 1.00,
+      scaleMobile: 1.00,
+      color: 0xffcc00,
+      shininess: 45.00,
+      waveHeight: 18.00,
+      waveSpeed: 0.6,
+      zoom: 0.85
+    });
+  })();
+
+  // ---------- typed line ----------
+  (function(){
+    const words = ['3D visuals', 'AI-powered web apps', 'Graphic designs', 'Interactive APKs'];
+    const el = document.getElementById('typed');
+    let i=0, j=0, forward=true;
+    (function loop(){
+      const word = words[i];
+      if(forward){ j++; el.textContent = word.slice(0,j); if(j===word.length){ forward=false; setTimeout(loop,900); return;} }
+      else { j--; el.textContent = word.slice(0,j); if(j===0){ forward=true; i=(i+1)%words.length; } }
+      setTimeout(loop, forward?80:40);
+    })();
+  })();
+
+  // ---------- mouse glow ----------
+  (function(){
+    const glow = document.getElementById('cursorGlow');
+    window.addEventListener('mousemove', (e)=>{
+      glow.style.left = e.clientX + 'px';
+      glow.style.top = e.clientY + 'px';
+    });
+    // reduce on mobile
+    window.addEventListener('touchstart', ()=>{ glow.style.opacity = '0.6'; });
+  })();
+
+  // ---------- Three.js small interactive scene in hero card ----------
+  (function(){
+    const canvas = document.getElementById('threeCanvas');
+    const renderer = new THREE.WebGLRenderer({ canvas, alpha:true, antialias:true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    function resize(){ renderer.setSize(canvas.clientWidth, canvas.clientHeight); camera.aspect = canvas.clientWidth / canvas.clientHeight; camera.updateProjectionMatrix(); }
+    // scene
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 1000);
+    camera.position.set(0,0,6);
+    const light = new THREE.DirectionalLight(0xffffff, 1);
+    light.position.set(5,5,5);
+    scene.add(light);
+    scene.add(new THREE.AmbientLight(0xaaaaaa, 0.6));
+
+    // geometry (stylized "animal-like" cluster)
+    const group = new THREE.Group();
+    const torus = new THREE.Mesh(new THREE.TorusKnotGeometry(1.1,0.32,160,24), new THREE.MeshStandardMaterial({color:0xffcc00, metalness:0.7, roughness:0.2, emissive:0x220a00}));
+    group.add(torus);
+    for(let k=0;k<8;k++){
+      const s = new THREE.Mesh(new THREE.SphereGeometry(0.18,24,24), new THREE.MeshStandardMaterial({color: new THREE.Color().setHSL(0.6 + Math.random()*0.1,0.8,0.5), metalness:0.5, roughness:0.3}));
+      s.position.set((Math.random()-0.5)*3,(Math.random()-0.5)*2,(Math.random()-0.5)*3);
+      group.add(s);
+    }
+    group.rotation.x = -0.2;
+    scene.add(group);
+
+    // mouse small parallax
+    let mouseX=0, mouseY=0;
+    window.addEventListener('mousemove',(e)=>{ mouseX = (e.clientX/window.innerWidth) * 2 -1; mouseY = (e.clientY/window.innerHeight) * 2 -1; });
+
+    function animate(){
+      requestAnimationFrame(animate);
+      group.rotation.y += 0.005 + mouseX*0.002;
+      group.rotation.x += 0.002 - mouseY*0.001;
+      group.children.forEach((c,i)=>{ c.rotation.y += 0.002 * (i+1); c.position.y += Math.sin(performance.now()*0.0005*(i+1))*0.0008; });
+      renderer.render(scene, camera);
+    }
+    // initial sizing & observe resize
+    const ro = new ResizeObserver(resize);
+    ro.observe(canvas);
+    resize();
+    animate();
+  })();
+
+  // ---------- Scroll reveal (IntersectionObserver) ----------
+  (function(){
+    const panels = document.querySelectorAll('section');
+    const io = new IntersectionObserver((entries)=>{
+      entries.forEach(e=>{
+        if(e.isIntersecting) e.target.classList.add('visible');
+      });
+    }, {threshold:0.28});
+    panels.forEach(p=>io.observe(p));
+  })();
+
+  // ---------- Music control + play/pause ----------
+  (function(){
+    const music = document.getElementById('bgMusic');
+    const btn = document.getElementById('musicBtn');
+    let playing = false;
+    btn.addEventListener('click', async ()=>{
+      if(!playing){
+        try{ await music.play(); playing = true; btn.textContent = '⏸'; } catch(e){ playing = false; btn.textContent = '▶'; alert('Autoplay blocked by browser: click again to play.'); }
+      } else { music.pause(); playing=false; btn.textContent='▶'; }
+    });
+    // show pause if autoplay allowed:
+    music.addEventListener('play', ()=>{ playing=true; btn.textContent='⏸'; });
+    music.addEventListener('pause', ()=>{ playing=false; btn.textContent='▶'; });
+  })();
+
+  // ---------- Contact form (Formspree + mailto fallback) ----------
+  (function(){
+    const form = document.getElementById('contactForm');
+    const result = document.getElementById('formResult');
+    const mailBtn = document.getElementById('openMail');
+    form.addEventListener('submit', async (e)=>{
+      e.preventDefault();
+      const action = form.getAttribute('action') || '';
+      if(!action || action.includes('YOUR_FORM_ID')){
+        // fallback to mailto
+        const name = form.name.value || '—';
+        const email = form.email.value || '—';
+        const message = form.message.value || '';
+        window.open(`mailto:abhyudayojha18@yahoo.com?subject=${encodeURIComponent('Contact from site: '+name)}&body=${encodeURIComponent(message+'\n\n— '+name+' — '+email)}`);
+        result.textContent = 'Opened mail client (fallback).';
+        form.reset();
+        return;
+      }
+      // If proper endpoint, post
+      try{
+        result.textContent='Sending...';
+        const data = new FormData(form);
+        const res = await fetch(action, {method:'POST',body:data,headers:{Accept:'application/json'}});
+        if(res.ok){ result.textContent='Message sent — thank you!'; form.reset(); } else { result.textContent='Failed — using mail fallback.'; mailBtn.click(); }
+      }catch(err){ result.textContent='Network error — using mail fallback.'; mailBtn.click(); }
+    });
+    mailBtn.addEventListener('click', ()=>{
+      const frm = document.getElementById('contactForm');
+      const name = frm.name.value || '—';
+      const email = frm.email.value || '—';
+      const message = frm.message.value || '';
+      window.open(`mailto:abhyudayojha18@yahoo.com?subject=${encodeURIComponent('Contact from site: '+name)}&body=${encodeURIComponent(message+'\n\n— '+name+' — '+email)}`);
+    });
+  })();
+
+  // ---------- small helpers ----------
+  document.getElementById('year').textContent = new Date().getFullYear();
+  // show bg image if you uploaded it to assets/bg.jpg
+  (function(){ const img = document.getElementById('bg-image'); fetch('assets/bg.jpg', {method:'HEAD'}).then(r=>{ if(r.ok) img.style.display='block'; }).catch(()=>{}); })();
+
+  </script>
+
+  <!-- BG music source (sample). Replace with your mp3 in assets/bg-music.mp3 for faster control -->
+  <audio id="bgMusic" loop>
+    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+  </audio>
+</body>
+</html>
