@@ -1,94 +1,72 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Abhyuday Ojha — 3D Portfolio</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Abhyuday Ojha | Portfolio</title>
 
-  <!-- fonts (Google) -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- Three.js (3D engine) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r121/three.min.js"></script>
 
-  <!-- CSS -->
-  <link rel="stylesheet" href="./style.css" />
+    <!-- Vanta.js (animation effects) -->
+    <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.rings.min.js"></script>
 
-  <!-- GSAP for animations -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" defer></script>
+    <style>
+      html, body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        width: 100%;
+        overflow: hidden;
+        font-family: 'Poppins', sans-serif;
+      }
 
-  <!-- Three.js -->
-  <script type="module" src="https://cdn.jsdelivr.net/npm/three@0.159.0/build/three.module.js" defer></script>
-  <script type="module" src="https://cdn.jsdelivr.net/npm/three@0.159.0/examples/jsm/controls/OrbitControls.js" defer></script>
+      #vanta-bg {
+        width: 100%;
+        height: 100vh;
+      }
 
-  <!-- main script -->
-  <script defer src="./script.js"></script>
-</head>
-<body>
-  <header class="site-header">
-    <div class="brand">Abhyuday Ojha</div>
-    <nav class="socials">
-      <a href="https://instagram.com/abhyudayojha/" target="_blank" rel="noopener" aria-label="Instagram">Instagram</a>
-      <a href="https://www.facebook.com/profile.php?id=61569350793152&ref=pl_edit_ig_profile_ac" target="_blank" rel="noopener">Facebook</a>
-      <a href="https://x.com/Abhyuday_Ojha" target="_blank" rel="noopener">X</a>
-      <a href="https://open.spotify.com/playlist/1mkSaNRukjTTxboM1FaGuA?si=htJEN8zDTE2ECVqJ4lCxfg" target="_blank" rel="noopener">Spotify</a>
-      <a href="https://www.youtube.com/@WasAbhyuday" target="_blank" rel="noopener">YouTube</a>
-    </nav>
-  </header>
+      .content {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: white;
+        text-align: center;
+      }
 
-  <!-- full-screen hero with background image + 3D canvas overlay -->
-  <section id="hero">
-    <img class="bg-image" src="assets/bg.jpg" alt="background" />
-    <canvas id="three-canvas"></canvas>
+      h1 {
+        font-size: 3em;
+        letter-spacing: 2px;
+      }
 
-    <div class="hero-content">
-      <h1 class="typing">Hi, I’m <span class="name">Abhyuday Ojha</span></h1>
-      <p class="subtitle"><span id="typed-text"></span></p>
-      <div class="cta">
-        <a href="#work" class="btn">View Work</a>
-        <a href="#contact" class="btn ghost">Contact</a>
-      </div>
+      p {
+        font-size: 1.3em;
+        opacity: 0.8;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="vanta-bg"></div>
+
+    <div class="content">
+      <h1>Abhyuday Ojha</h1>
+      <p>Web Developer • Designer • Creator</p>
     </div>
-  </section>
 
-  <main>
-    <section id="about" class="panel">
-      <h2>About</h2>
-      <p>I’m a student, Web Developer, Graphic Designer — I make 3D APKs and visual web applications. I build interactive, animated portfolio experiences and ship production-ready sites.</p>
-    </section>
-
-    <section id="work" class="panel">
-      <h2>Work</h2>
-      <p>Upload your apps and projects here (we’ll add project cards later). This area will use scroll-linked 3D animations.</p>
-    </section>
-
-    <section id="contact" class="panel">
-      <h2>Contact</h2>
-      <p>Send me a message — live contact below.</p>
-
-      <!-- Replace FORMSPREE_URL with your Formspree endpoint if you want direct email form handling.
-           If you don't have it, users will be redirected to mailto fallback. -->
-      <form id="contactForm" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
-        <label>
-          Name
-          <input type="text" name="name" required />
-        </label>
-        <label>
-          Email
-          <input type="email" name="email" required />
-        </label>
-        <label>
-          Message
-          <textarea name="message" rows="5" required></textarea>
-        </label>
-        <div class="form-actions">
-          <button type="submit" class="btn">Send</button>
-          <button type="button" id="mailtoBtn" class="btn ghost">Open Mail</button>
-        </div>
-        <div id="formResult"></div>
-      </form>
-    </section>
-  </main>
-
-  <footer class="site-footer">
-    <div>© <span id="year"></span> Abhyuday Ojha — 3D Portfolio</div>
-  </footer>
-</body>
+    <script>
+      VANTA.RINGS({
+        el: "#vanta-bg",
+        mouseControls: true,
+        touchControls: true,
+        gyroControls: false,
+        minHeight: 200.00,
+        minWidth: 200.00,
+        scale: 1.00,
+        scaleMobile: 1.00,
+        backgroundColor: 0x101820,
+        color: 0xffcc00
+      })
+    </script>
+  </body>
 </html>
